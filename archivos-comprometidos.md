@@ -34,7 +34,7 @@ getCompromisedFiles(lastSafeDownload, droneLogs) // => [8, 42]
 
 ## Solucion:
 
-```
+```js
 function getCompromisedFiles(lastSafeDownload, droneLogs) { 
   
   const logsChanged = new Set(droneLogs
