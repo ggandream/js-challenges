@@ -14,3 +14,22 @@ function frutaEmpacadaCorrectamente(entrada, salida) {
 
   return pila.length === 0;
 }
+
+frutaEmpacadaCorrectamente(
+  ["manzana", "banana", "kiwi"],
+  ["kiwi", "banana", "manzana"],
+);
+// true → se empacaron en orden LIFO
+
+frutaEmpacadaCorrectamente(
+  ["manzana", "banana", "kiwi"],
+  ["banana", "kiwi", "manzana"],
+);
+// false → no se puede obtener así desde una pila
+
+frutaEmpacadaCorrectamente(
+  ["manzana", "banana", "kiwi"],
+  ["banana", "kiwi", "manzana"],
+);
+
+//false
