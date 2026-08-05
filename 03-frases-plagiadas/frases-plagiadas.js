@@ -1,21 +1,13 @@
 function detectarPlagio(base, frasesEstudiante) {
-  const frasesBase = new Set(
-    base.map((frase) =>
-      frase
-        .toLowerCase()
-        .trim()
-        .replace(/[.!?¿¡]/g, ""),
-    ),
-  );
+  const normalizar = (frase) => {
+    return frase
+      .toLowerCase()
+      .replace(/[.!?¿¡]/g, "")
+      .trim();
+  };
+  const frasesBase = new Set(base.map((frase) => normalizar(frase)));
 
-  return frasesEstudiante.filter((frase) =>
-    frasesBase.has(
-      frase
-        .toLowerCase()
-        .trim()
-        .replace(/[.!?¿¡]/g, ""),
-    ),
-  );
+  return frasesEstudiante.filter((frase) => frasesBase.has(normalizar(frase)));
 }
 
 const base = [
