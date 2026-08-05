@@ -63,3 +63,9 @@ function detectarPlagio(base, frasesEstudiante) {
   );
 }
 ```
+
+## Calificación: 95/100
+### Fortalezas
+1. Uso eficiente de un Set para lograr una búsqueda de tiempo constante O(1) por frase.
+2. Código conciso, legible y funcional.
+3. Manejo correcto de las transformaciones de texto solicitadas mediante expresiones regulares.
