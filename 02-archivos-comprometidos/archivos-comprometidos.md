@@ -45,3 +45,8 @@ function getCompromisedFiles(lastSafeDownload, droneLogs) {
 }
 
 ```
+## Calificación: 100/100
+### Fortalezas
+1. Código limpio, conciso y eficiente.
+2. Uso correcto de Set para eliminar duplicados de forma óptima.
+3. La lógica de filtrado y ordenamiento es clara y cumple perfectamente con los requisitos.

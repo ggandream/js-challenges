@@ -83,3 +83,17 @@ function decodeSpell(spell) {
 
 }
 ```
+
+## Calificación: 92/100
+### Fortalezas
+1. La lógica implementada maneja correctamente la regla de resta para símbolos menores seguidos de mayores.
+2. El uso de un array intermedio para almacenar los valores facilita la lógica de comparación posterior.
+3. El código es limpio, legible y sigue una estructura lógica clara.
+
+### Debilidades
+1. El uso de dos bucles separados y un array intermedio aumenta ligeramente el uso de memoria (O(n) espacio adicional).
+2. La lógica de `num[i + 1] === undefined` es funcional, pero podría simplificarse.
+
+### Próximos pasos
+1. Podrías optimizar el rendimiento procesando la cadena en una sola pasada (O(n) tiempo y O(1) espacio) comparando el valor actual con el siguiente sin necesidad de crear un array intermedio.
+2. Considera usar un objeto de mapeo (diccionario) en lugar de una sentencia `switch` para mejorar la legibilidad y reducir la longitud del código.
