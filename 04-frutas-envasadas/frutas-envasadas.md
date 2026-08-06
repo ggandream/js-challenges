@@ -34,35 +34,34 @@ frutaEmpacadaCorrectamente(
  ```js
 function frutaEmpacadaCorrectamente(entrada, salida) {
   let pila = [];
+  let puntero = 0;
 
   for (const fruta of entrada) {
     pila.push(fruta);
+
+    if (pila.length === entrada.length) {
+      while (pila.length > 0 && pila[pila.length - 1] === salida[puntero]) {
+        pila.pop();
+        puntero++;
+      }
+    }
   }
 
-  let puntero = 0;
-
-  while (pila.length > 0 && pila[pila.length - 1] === salida[puntero]) {
-    pila.pop();
-    puntero++;
-  }
-
-  return pila.length === 0;
+  return pila.length === 0 && puntero === salida.length;
 }
+
 
  ```
 
-## Calificación: 62/100
-### Problemas
-1. El código contiene una sentencia 'import' fuera de la función, lo cual viola la regla de 'Single non-exported function'.
-
+## Calificación: 81/100
 ### Fortalezas
-1. El código es limpio, legible y utiliza estructuras de datos adecuadas (Array como pila).
+1. Uso correcto de una estructura de datos tipo pila (LIFO) para resolver el problema.
+2. Código limpio, legible y con una estructura lógica clara.
 
 ### Debilidades
-1. La lógica implementada es incorrecta para el problema de validación de pila (Stack Permutation). El código actual intenta vaciar toda la entrada en la pila antes de comparar, lo que solo permite verificar si la salida es el reverso exacto de la entrada.
-2. El algoritmo no permite intercalar operaciones de 'push' y 'pop' según sea necesario para validar secuencias más complejas.
+1. La lógica actual es incorrecta para casos donde la salida requiere vaciar la pila antes de procesar todas las entradas (ej. entrada ['A', 'B'], salida ['B', 'A'] debería ser true, pero tu código fallará).
+2. El bucle principal fuerza el ingreso de todos los elementos antes de intentar vaciar la pila, lo cual no permite la intercalación de operaciones de push y pop.
 
 ### Próximos pasos
-1. Elimina la sentencia 'import' para cumplir con las reglas de la evaluación.
-2. Refactoriza el algoritmo para que, mientras recorres la entrada, puedas realizar operaciones de 'pop' en la pila cada vez que el elemento superior coincida con el elemento actual de la salida.
-3. Asegúrate de que el puntero de salida avance correctamente durante el proceso de empacado.
+1. Modifica el algoritmo para que, dentro del bucle de entrada, intentes hacer 'pop' de la pila cada vez que el elemento superior coincida con el elemento actual de la salida.
+2. Asegúrate de que el puntero de salida avance correctamente mientras la pila coincida con la secuencia esperada.
