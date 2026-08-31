@@ -8,8 +8,8 @@ function organizarEstanteria1(libros, posiciones) {
 }
 
 function organizarEstanteria2(libros, posiciones) {
-  let estanteria = [];
-  let minimo = Math.min(...posiciones);
+  const estanteria = [];
+  const minimo = Math.min(...posiciones);
 
   for (let i = 0; i < libros.length; i++) {
     estanteria[posiciones[i] - minimo] = libros[i];

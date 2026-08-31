@@ -55,26 +55,12 @@ function organizarEstanteria1(libros, posiciones) {
 
 ## Calificación: 88/100
 
-### Fortalezas
-1. El emparejamiento de cada libro con su posición mediante `map` y el posterior ordenado numérico es una estrategia correcta y fácil de seguir.
-2. Se usa el comparador `(a, c) => a - c`, evitando el ordenado lexicográfico por defecto de `.sort()`, que fallaría con posiciones de dos o más dígitos (ej. `[8, 9, 10]`).
-3. `map` crea un array nuevo, así que la mutación de `.sort()` no afecta a los arrays recibidos por parámetro.
-
-### Debilidades
-1. La solución es O(n log n) por el ordenado, cuando el enunciado garantiza posiciones consecutivas: restando la posición mínima se puede colocar cada libro directamente en su índice y bajar a O(n).
-2. Los nombres de las variables desestructuradas (`a`, `c`, `k`, `v`) no aportan significado; `[posicion]` y `[, libro]` harían el código autoexplicativo.
-3. La variable `resultado` solo guarda el valor que se devuelve en la línea siguiente; se puede retornar la cadena de métodos directamente.
-
-### Próximos pasos
-1. Aprovechar que las posiciones son consecutivas para resolverlo en un solo recorrido → **Solución 2**.
-2. Renombrar las desestructuraciones a `([posicion])` y `([, libro])`, y eliminar la variable intermedia `resultado`.
-
 ## Solución 2: colocar cada libro en su índice
 
 ```js
 function organizarEstanteria2(libros, posiciones) {
-  let estanteria = [];
-  let minimo = Math.min(...posiciones);
+  const estanteria = [];
+  const minimo = Math.min(...posiciones);
 
   for (let i = 0; i < libros.length; i++) {
     estanteria[posiciones[i] - minimo] = libros[i];
@@ -95,7 +81,3 @@ function organizarEstanteria2(libros, posiciones) {
 1. `Math.min(...posiciones)` pasa cada posición como argumento: con arrays muy grandes (del orden de 100.000 elementos) puede provocar un `Maximum call stack size exceeded`. Con `posiciones.reduce((a, b) => Math.min(a, b), Infinity)` no hay ese límite.
 2. `estanteria` y `minimo` nunca se reasignan, así que `const` comunicaría mejor la intención que `let`.
 3. Depende de que las posiciones sean realmente consecutivas: si hubiera un hueco, el array devuelto tendría slots vacíos en lugar de fallar de forma visible. El enunciado lo garantiza, pero conviene tenerlo presente si la función se reutiliza.
-
-### Próximos pasos
-1. Cambiar los dos `let` por `const`.
-2. Si quieres una versión más declarativa del mismo algoritmo: `libros.forEach((libro, i) => { estanteria[posiciones[i] - minimo] = libro })`.
