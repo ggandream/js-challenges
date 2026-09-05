@@ -16,6 +16,12 @@ participanteConMasVotos(['Carlos', 'Ana', 'Carlos', 'Carlos', 'Ana', 'Ana'])
 
 participanteConMasVotos(['Mario', 'Luigi', 'Luigi', 'Peach'])
 // -> "Luigi" porque tiene el mayor número de votos (2 votos).
+
+participanteConMasVotos([ 'A', 'B', 'A', 'B', 'B', 'A' ]);
+// -> "A".
+
+participanteConMasVotos([ 'C', 'C', 'B', 'B', 'C', 'B', 'A', 'D' ]);
+// -> "B".
 ```
 
 ## 📌 Restricciones:
