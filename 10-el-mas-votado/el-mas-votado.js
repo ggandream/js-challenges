@@ -1,33 +1,33 @@
 function participanteConMasVotos(votos) {
-  const conteo = new Map();
+  const conteo = [];
   let maxVotos = 0;
-  let candidatoElecto;
+  let ganador;
 
-  votos.forEach((candidato) => {
-    conteo.set(candidato, counter(votos, candidato));
+  const participantes = new Set(votos);
+
+  Array.from(participantes).map((participante) => {
+    let contador = 0;
+
+    votos.forEach((voto) => {
+      if (participante === voto) {
+        contador++;
+      }
+    });
+
+    conteo.push({ candidato: participante, votos: contador });
+
+    return conteo;
   });
 
-  for (const [candidato, votos] of conteo) {
-    if (votos > maxVotos) {
-      maxVotos = votos;
-      candidatoElecto = candidato;
-    }
-
-    if (votos === maxVotos) {
-      maxVotos = votos;
-      candidatoElecto = candidato;
-    }
-  }
-
-  return candidatoElecto;
-}
-
-function counter(array, specialItem) {
-  let i = 0;
-  array.forEach((item) => {
-    if (item == specialItem) {
-      i++;
+  conteo.map((conteo) => {
+    if (maxVotos < conteo.votos) {
+      maxVotos = conteo.votos;
+      ganador = conteo.candidato;
+    } else if (maxVotos === conteo.votos) {
+      maxVotos = conteo.votos;
+      ganador = conteo.candidato;
     }
   });
-  return i;
+
+  return ganador;
 }
