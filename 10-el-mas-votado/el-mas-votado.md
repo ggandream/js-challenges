@@ -28,49 +28,40 @@ participanteConMasVotos(['Mario', 'Luigi', 'Luigi', 'Peach'])
 
 ```js
 function participanteConMasVotos(votos) {
-  const participantes = new Set(votos);
   const conteoVotos = new Map();
+  let maxVotos = 0;
+  let ganador;
+  
+  votos.forEach((voto) => {
+    const cantVotos = (conteoVotos.get(voto) || 0) + 1;
+    conteoVotos.set(voto, cantVotos);
 
-  Array.from(participantes).forEach((participante) => {
-    let cantVotos = 0;
-    votos.forEach((voto) => {
-      if (participante === voto) cantVotos++;
-    });
-    conteoVotos.set(participante, cantVotos);
-  });
+    if(cantVotos >= maxVotos){
+      maxVotos = cantVotos;
+      ganador = voto;
+    }
 
-  const ganador = [...conteoVotos.entries()].reduce((acc, actual) => {
-    return actual[1] >= acc[1] ? actual : acc;
-  });
+  })
 
-  return ganador[0];
+  return ganador;
 }
 ```
 
-## Calificación: 87/100
+## Calificación: 95/100
 
 ### Fortalezas
-1. El código es funcional y resuelve correctamente el problema planteado.
-2. El uso de `Map` y `Set` demuestra un buen conocimiento de las estructuras de datos modernas de JavaScript.
+1. El uso de un `Map` para el conteo de votos es eficiente y adecuado para este problema.
+2. La lógica para manejar el empate (actualizar el ganador cuando los votos son mayores o iguales) resuelve correctamente el requisito de devolver el último participante en caso de empate.
+3. Código limpio, legible y fácil de seguir.
 
-### Debilidades
-1. La complejidad algorítmica es O(N · M) debido al uso de un bucle anidado (`forEach` dentro de otro `forEach`), lo cual es ineficiente para grandes volúmenes de datos.
-2. El enfoque actual recorre el array de votos múltiples veces innecesariamente.
+### 🔑 La clave del desempate
 
-### Próximos pasos
-1. Optimiza el algoritmo a O(N) utilizando un solo bucle para contar los votos en un `Map`, lo que mejorará significativamente el rendimiento.
-2. Para manejar el empate según la última aparición, puedes iterar el array de votos una sola vez y actualizar el conteo, o bien, procesar el array de forma que el último elemento prevalezca naturalmente.
+Contar y elegir al ganador en el **mismo** recorrido es lo que hace que el empate salga bien. Como se recorre `votos` en su orden original, el `>=` deja ganar siempre al voto más tardío, que es justo lo que pide el enunciado.
 
-### ⚠️ Nota sobre el desempate
-
-Ejecutando la función, los tres ejemplos del enunciado pasan, pero la regla de desempate todavía no se cumple:
+Intentos anteriores decidían el ganador con un `reduce` sobre `conteoVotos.entries()`, y ahí el desempate falla: `entries()` va en orden de inserción, es decir, de **primera** aparición de cada participante, así que el `>=` se quedaba con el que debutó más tarde, no con el que fue votado más tarde. Un caso que lo destapa:
 
 ```js
-participanteConMasVotos(['A', 'B', 'A', 'B', 'B', 'A'])
-// devuelve "B", pero debería ser "A": ambos empatan a 3 votos y la
-// última aparición de A (índice 5) es posterior a la de B (índice 4).
+participanteConMasVotos(['A', 'C', 'C', 'B', 'A'])
+// -> "A": A y C empatan a 2 votos, pero la última A (índice 4)
+// va después de la última C (índice 2). La versión con reduce devolvía "C".
 ```
-
-`conteoVotos` conserva el orden del `Set`, que es el de **primera** aparición, y el `reduce` con `>=` se queda con el último de ese orden entre los empatados, no con el que aparece más tarde en `votos`. Probado con 20.000 arrays aleatorios (hasta 8 votos y 4 candidatos), falla en torno al 6 % de los casos.
-
-Es justo lo que resuelve el paso 2 de arriba: recorrer `votos` en su orden original con un `Map` y quedarse con el candidato cuyo conteo acumulado sea mayor **o igual** que el máximo.
