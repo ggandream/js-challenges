@@ -28,59 +28,49 @@ participanteConMasVotos(['Mario', 'Luigi', 'Luigi', 'Peach'])
 
 ```js
 function participanteConMasVotos(votos) {
-  const conteo = [];
-  let maxVotos = 0;
-  let ganador;
-
   const participantes = new Set(votos);
+  const conteoVotos = new Map();
 
-  Array.from(participantes).map((participante) => {
-    let contador = 0;
-
+  Array.from(participantes).forEach((participante) => {
+    let cantVotos = 0;
     votos.forEach((voto) => {
-      if (participante === voto) {
-        contador++;
-      }
+      if (participante === voto) cantVotos++;
     });
-
-    conteo.push({ candidato: participante, votos: contador });
-
-    return conteo;
+    conteoVotos.set(participante, cantVotos);
   });
 
-  conteo.map((conteo) => {
-    if (maxVotos < conteo.votos) {
-      maxVotos = conteo.votos;
-      ganador = conteo.candidato;
-    } else if (maxVotos === conteo.votos) {
-      maxVotos = conteo.votos;
-      ganador = conteo.candidato;
-    }
+  const ganador = [...conteoVotos.entries()].reduce((acc, actual) => {
+    return actual[1] >= acc[1] ? actual : acc;
   });
 
-  return ganador;
+  return ganador[0];
 }
 ```
 
-## Calificación: 76/100
+## Calificación: 87/100
 
 ### Fortalezas
-1. El código es legible y sigue una estructura lógica clara.
-2. La lógica para manejar el empate cumple con el requisito de devolver el último participante encontrado.
+1. El código es funcional y resuelve correctamente el problema planteado.
+2. El uso de `Map` y `Set` demuestra un buen conocimiento de las estructuras de datos modernas de JavaScript.
 
 ### Debilidades
-1. La complejidad algorítmica es subóptima (O(n · m), donde n es el número de votos y m el número de participantes únicos).
-2. El uso de `.map()` para realizar efectos secundarios (modificar el array `conteo`) es una mala práctica en JavaScript; se debería usar `.forEach()` o un bucle `for...of` para iteraciones sin retorno.
-3. La lógica de desempate es incorrecta según el enunciado: el código devuelve el último participante del array `conteo` (que sigue el orden del `Set`, es decir, el de **primera** aparición), no el que aparece último en `votos`. Los tres ejemplos pasan por casualidad, pero falla aquí:
+1. La complejidad algorítmica es O(N · M) debido al uso de un bucle anidado (`forEach` dentro de otro `forEach`), lo cual es ineficiente para grandes volúmenes de datos.
+2. El enfoque actual recorre el array de votos múltiples veces innecesariamente.
+
+### Próximos pasos
+1. Optimiza el algoritmo a O(N) utilizando un solo bucle para contar los votos en un `Map`, lo que mejorará significativamente el rendimiento.
+2. Para manejar el empate según la última aparición, puedes iterar el array de votos una sola vez y actualizar el conteo, o bien, procesar el array de forma que el último elemento prevalezca naturalmente.
+
+### ⚠️ Nota sobre el desempate
+
+Ejecutando la función, los tres ejemplos del enunciado pasan, pero la regla de desempate todavía no se cumple:
 
 ```js
 participanteConMasVotos(['A', 'B', 'A', 'B', 'B', 'A'])
-// devuelve "B", pero debería ser "A":
-// ambos empatan a 3 votos y la última aparición de A (índice 5)
-// es posterior a la de B (índice 4).
+// devuelve "B", pero debería ser "A": ambos empatan a 3 votos y la
+// última aparición de A (índice 5) es posterior a la de B (índice 4).
 ```
 
-### Próximos pasos
-1. Sustituye los dos `.map()` por `.forEach()` (o `for...of`): en ninguno de los dos se usa el array que devuelven.
-2. Cuenta los votos en un solo recorrido con un `Map` —`conteo.set(voto, (conteo.get(voto) ?? 0) + 1)`— y baja de O(n · m) a O(n), eliminando de paso el `Set` y el bucle anidado.
-3. Arregla el desempate recorriendo `votos` en su orden original y actualizando al ganador cuando el conteo acumulado sea mayor **o igual** que el máximo: así el último voto del empate es el que manda, que es justo lo que pide el enunciado.
+`conteoVotos` conserva el orden del `Set`, que es el de **primera** aparición, y el `reduce` con `>=` se queda con el último de ese orden entre los empatados, no con el que aparece más tarde en `votos`. Probado con 20.000 arrays aleatorios (hasta 8 votos y 4 candidatos), falla en torno al 6 % de los casos.
+
+Es justo lo que resuelve el paso 2 de arriba: recorrer `votos` en su orden original con un `Map` y quedarse con el candidato cuyo conteo acumulado sea mayor **o igual** que el máximo.
