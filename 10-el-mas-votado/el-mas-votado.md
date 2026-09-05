@@ -28,56 +28,59 @@ participanteConMasVotos(['Mario', 'Luigi', 'Luigi', 'Peach'])
 
 ```js
 function participanteConMasVotos(votos) {
-  const conteo = new Map();
+  const conteo = [];
   let maxVotos = 0;
-  let candidatoElecto;
+  let ganador;
 
-  votos.forEach((candidato) => {
-    conteo.set(candidato, counter(votos, candidato));
-  })
+  const participantes = new Set(votos);
 
-  for (const [candidato, votos ] of conteo) {
-    if(votos > maxVotos){
-      maxVotos = votos;
-      candidatoElecto = candidato;
+  Array.from(participantes).map((participante) => {
+    let contador = 0;
+
+    votos.forEach((voto) => {
+      if (participante === voto) {
+        contador++;
+      }
+    });
+
+    conteo.push({ candidato: participante, votos: contador });
+
+    return conteo;
+  });
+
+  conteo.map((conteo) => {
+    if (maxVotos < conteo.votos) {
+      maxVotos = conteo.votos;
+      ganador = conteo.candidato;
+    } else if (maxVotos === conteo.votos) {
+      maxVotos = conteo.votos;
+      ganador = conteo.candidato;
     }
+  });
 
-    if(votos === maxVotos){
-      maxVotos = votos;
-      candidatoElecto = candidato;
-    }
-  }
-  
-  return candidatoElecto;
-}
-
-function counter(array, specialItem) {
-  let i = 0;
-  array.forEach((item) => {
-    if(item == specialItem){
-      i++;
-    }
-  })
-  return i;
+  return ganador;
 }
 ```
 
-## Calificación: 48/100
-
-Hay un incumplimiento importante que conviene revisar antes de continuar.
-
-### Problemas
-1. El código contiene más de una función, violando la regla de *Single non-exported function*.
+## Calificación: 76/100
 
 ### Fortalezas
-1. La lógica básica para contar votos utilizando un `Map` es un buen punto de partida.
+1. El código es legible y sigue una estructura lógica clara.
+2. La lógica para manejar el empate cumple con el requisito de devolver el último participante encontrado.
 
 ### Debilidades
-1. Violación de la regla de función única: el código incluye una función auxiliar `counter` fuera de la función principal.
-2. Ineficiencia algorítmica: la función `counter` se llama dentro de un bucle, lo que resulta en una complejidad de O(n²).
-3. Lógica de desempate incorrecta: el bucle actual no garantiza que se devuelva el candidato que aparece último en el array original en caso de empate.
+1. La complejidad algorítmica es subóptima (O(n · m), donde n es el número de votos y m el número de participantes únicos).
+2. El uso de `.map()` para realizar efectos secundarios (modificar el array `conteo`) es una mala práctica en JavaScript; se debería usar `.forEach()` o un bucle `for...of` para iteraciones sin retorno.
+3. La lógica de desempate es incorrecta según el enunciado: el código devuelve el último participante del array `conteo` (que sigue el orden del `Set`, es decir, el de **primera** aparición), no el que aparece último en `votos`. Los tres ejemplos pasan por casualidad, pero falla aquí:
+
+```js
+participanteConMasVotos(['A', 'B', 'A', 'B', 'B', 'A'])
+// devuelve "B", pero debería ser "A":
+// ambos empatan a 3 votos y la última aparición de A (índice 5)
+// es posterior a la de B (índice 4).
+```
 
 ### Próximos pasos
-1. Integra toda la lógica dentro de una sola función.
-2. Optimiza el conteo de votos recorriendo el array una sola vez (O(n)) en lugar de llamar a una función de conteo repetidamente.
-3. Para resolver el desempate correctamente, registra el índice de la última aparición o actualiza el ganador basándote en el orden de procesamiento del array.
+1. Sustituye los dos `.map()` por `.forEach()` (o `for...of`): en ninguno de los dos se usa el array que devuelven.
+2. Cuenta los votos en un solo recorrido con un `Map` —`conteo.set(voto, (conteo.get(voto) ?? 0) + 1)`— y baja de O(n · m) a O(n), eliminando de paso el `Set` y el bucle anidado.
+3. Arregla el desempate recorriendo `votos` en su orden original y actualizando al ganador cuando el conteo acumulado sea mayor **o igual** que el máximo: así el último voto del empate es el que manda, que es justo lo que pide el enunciado.
