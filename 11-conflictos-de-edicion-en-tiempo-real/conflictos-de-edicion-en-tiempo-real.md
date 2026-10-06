@@ -27,30 +27,6 @@ Luego, se aplican las del segundo array, pero:
 Ejemplo:
 ```js
 
-const cambiosA = [
-  { user: 'ana', op: 'insert', index: 0, text: 'Hola' },
-  { user: 'ana', op: 'insert', index: 4, text: ' mundo' },
-]
- 
-const cambiosB = [
-  { user: 'luis', op: 'delete', index: 4 },
-  { user: 'luis', op: 'insert', index: 4, text: 'Mundo cruel' },
-]
- 
-resolverConflictos(cambiosA, cambiosB)
-// => "HolaMundo cruelmundo"
-
-```
-
-## 📌 Reglas:
-- El texto comienza vacío.
-- Los índices son relativos al estado actual del texto en ese momento.
-- No se validan índices negativos ni tipos incorrectos.
-- No modificar los arrays originales.
-
-## Solución: 
-```js
-
 function resolverConflictos(firstUserChanges, secondUserChanges) {
   let texto = '';
   let cadena1 = '';
