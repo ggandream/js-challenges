@@ -89,4 +89,17 @@ function resolverConflictos(firstUserChanges, secondUserChanges) {
 }
 
 ```
-## Calificación:
+## Calificación: 91/100
+
+### Fortalezas
+1. La lógica implementada sigue correctamente el flujo de operaciones secuenciales.
+2. El uso de `substring` para manipular el texto es claro y efectivo para este caso de uso.
+3. Código limpio y fácil de seguir.
+
+### Debilidades
+1. La lógica de validación para 'insert' permite insertar en `index === texto.length`, lo cual es correcto, pero la condición `cambiosUsuario[i].index > texto.length` es adecuada. Sin embargo, el manejo de índices en 'delete' podría ser más robusto.
+2. Se crean variables innecesarias (`cadena1`, `cadena2`) fuera del ámbito del `switch`, lo cual es un poco redundante.
+
+### Próximos pasos
+1. Considera declarar las variables `cadena1` y `cadena2` dentro del `switch` o usar `slice` directamente en la concatenación para reducir el ruido visual.
+2. Aunque el código funciona, podrías usar un bucle `for...of` en lugar de `while` con un contador manual para mejorar la legibilidad y evitar errores de índice.
