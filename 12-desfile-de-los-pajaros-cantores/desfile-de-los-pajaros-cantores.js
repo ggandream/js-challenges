@@ -2,28 +2,24 @@ function countMelodySequences(birdNotes) {
   // tu código aquí
   let counterSecuence = 0;
   let currentSecuence = [];
-  const notes = [...birdNotes];
 
-  while(notes.length > 0){
+  while(birdNotes.length > 0){
 
-    for(let note of notes){
+    for(let note of birdNotes){
       currentSecuence.push(note);
 
       if(currentSecuence.length > 1){
-        let secuence = currentSecuence.toSorted((a, b) => {
-          return a - b;
-        });
 
-        let min = Math.min(...secuence);
-        let max = Math.max(...secuence);
+        let min = Math.min(...currentSecuence);
+        let max = Math.max(...currentSecuence);
 
-        if (max - min + 1 === secuence.length) {
+        if (max - min + 1 === currentSecuence.length) {
           counterSecuence++;
         }
       }
     }
 
-    notes.shift();
+    birdNotes.shift();
     currentSecuence = [];
   }
 

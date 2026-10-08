@@ -37,46 +37,41 @@ function countMelodySequences(birdNotes) {
   // tu código aquí
   let counterSecuence = 0;
   let currentSecuence = [];
-  const notes = [...birdNotes];
 
-  while(notes.length > 0){
+  while(birdNotes.length > 0){
 
-    for(let note of notes){
+    for(let note of birdNotes){
       currentSecuence.push(note);
 
       if(currentSecuence.length > 1){
-        let secuence = currentSecuence.toSorted((a, b) => {
-          return a - b;
-        });
 
-        let min = Math.min(...secuence);
-        let max = Math.max(...secuence);
+        let min = Math.min(...currentSecuence);
+        let max = Math.max(...currentSecuence);
 
-        if (max - min + 1 === secuence.length) {
+        if (max - min + 1 === currentSecuence.length) {
           counterSecuence++;
         }
       }
     }
 
-    notes.shift();
+    birdNotes.shift();
     currentSecuence = [];
   }
 
   return counterSecuence;
 }
-
 ```
 
-## Calificación: 87/100
+## Calificación: 86/100
 
 ### Fortalezas
-1. La lógica implementada es correcta y resuelve el problema planteado siguiendo las reglas de las secuencias.
+1. La lógica implementada resuelve correctamente el problema planteado.
 2. El código es legible y fácil de seguir.
 
 ### Debilidades
-1. La complejidad algorítmica es O(n³ log n) debido al uso de `toSorted` y `Math.min/max` dentro de un bucle anidado, lo cual no es eficiente para arreglos grandes.
-2. El uso de `notes.shift()` dentro del bucle `while` es costoso (O(n)), lo que degrada el rendimiento.
+1. El uso de `shift()` dentro de un bucle `while` tiene una complejidad temporal de O(n²), lo que puede ser ineficiente para arreglos muy grandes.
+2. El cálculo repetitivo de `Math.min` y `Math.max` dentro del bucle interno aumenta innecesariamente la carga computacional.
 
 ### Próximos pasos
-1. Optimiza el cálculo de la secuencia: en lugar de ordenar y buscar el mínimo/máximo en cada iteración, mantén un registro del valor mínimo y máximo actual y verifica si el conjunto de elementos es único (usando un Set) para validar la condición de 'sin repeticiones' y 'rango continuo'.
-2. Evita el uso de `shift()` en arreglos grandes; considera usar un índice para recorrer el arreglo original.
+1. Considera iterar sobre el arreglo usando índices en lugar de modificar el arreglo original con `shift()`.
+2. Para optimizar, puedes actualizar el mínimo y el máximo de forma incremental mientras recorres el arreglo en lugar de recalcularlos desde cero en cada paso.
